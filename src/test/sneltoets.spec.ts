@@ -158,41 +158,8 @@ test('valid calculation', async ({ page }) => {
 test('breaking the calculation', async ({ page }) => {
   await page.goto(targetUrl);
 
+  // TODO: smart re-use of locator with additional '-error' suffix enables checking for the alert
   await page.locator(amountToLoan).fill("a");
-  // await expect(page.getByRole('alert', { name: "Ongeldig nummer" })).toBeVisible();
 
-  /*
-  await page.locator(amountBox3Loan).fill("250000");
-  await page.locator(mortgageRate).fill("4");
-  await page.locator(durationInMonths).fill("360");
-
-  await expect(page.locator(amountToLoan)).toHaveValue("400.000");
-  await expect(page.locator(amountBox3Loan)).toHaveValue("250.000");
-  await expect(page.locator(mortgageRate)).toHaveValue("4,00");
-
-  await page.locator(annualGroundRent).fill("5000");
-  await page.locator(energyLabel).selectOption('GeenEnergielabelBeschikbaar');
-  await page.locator(dateOfBirth).fill("07-09-1976");
-  await page.locator(grossAnnualIncome).fill("45000");
-  await page.locator(dateOfBirth).focus(); // leaving grossAnnualIncome, triggering formatting of contents
-
-  await expect(page.locator(annualGroundRent)).toHaveValue("5.000")
-  await expect(page.locator(grossAnnualIncome)).toHaveValue("45.000")
-
-  await page.locator(reducedIncome).fill("10000")
-  await page.locator(reductionStartMonth).fill("200")  // At the 100-th month of mortgage duration
-
-  await page.locator(calculateBtn).click();
-
-  await expect(page.locator(calculationDate)).toBeVisible();
-  await expect(page.locator(indicationLoan)).toBeVisible();
-
-  // Expected format: dd-mm-yyyy
-  // NOTE: can yield the wrong date when test case is executed around midnight!
-  let formattedDate = dateToDDMMYYYY(new Date())
-  await expect(page.locator(calculationDate)).toHaveText(formattedDate);
-
-  // TODO: Not familiar with the calculation, must assume this is correct.
-  await expect(page.locator(indicationLoan)).toHaveText("63.256")
-  */
+  // ...etc
 });
