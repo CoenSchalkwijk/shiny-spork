@@ -1,0 +1,22 @@
+{
+  "name": "shiny-spork",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CoenSchalkwijk/shiny-spork.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CoenSchalkwijk/shiny-spork/issues"
+  },
+  "homepage": "https://github.com/CoenSchalkwijk/shiny-spork#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.55.1",
+    "@types/node": "^24.6.2"
+  }
+}
