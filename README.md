@@ -12,6 +12,9 @@
 - Elementen hebben mooie id's... met een willekeurig element in de naam :) en `XPATH` en `regular expressions` lijken nog geen goede vrienden. 
 - Bij het werken naar een eerste POC worden er TODO's verzameld. De eerste implementatie gaat recht op het doel af. Wil daarmee (te veel) `premature optimization` voorkomen.
 - Nu de meeste elementen een locator hebben, worden de test cases verder uitgewerkt.
+- Oh dear, assignment schrijft voor een toets met 'medeaanvrager'.
+- Gegeven de gestelde tijd en de tijd die ondertussen al aan de opdracht is besteed, komt het vermoeden dat het gebruik van XPATH locators niet in de lijn van verwachtingen ligt? Ik ben/blijf vooralsnog voorstander van deze aanpak.
+- Fix brainfart: vervang `//*` met `//input` (of ander type) en verwijder check op `not(contains(@id, 'label'))`.
 
 # Uitvoeren tests
 
