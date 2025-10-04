@@ -13,8 +13,9 @@
 - Bij het werken naar een eerste POC worden er TODO's verzameld. De eerste implementatie gaat recht op het doel af. Wil daarmee (te veel) `premature optimization` voorkomen.
 - Nu de meeste elementen een locator hebben, worden de test cases verder uitgewerkt.
 - Oh dear, assignment schrijft voor een toets met 'medeaanvrager'.
-- Gegeven de gestelde tijd en de tijd die ondertussen al aan de opdracht is besteed, komt het vermoeden dat het gebruik van XPATH locators niet in de lijn van verwachtingen ligt? Ik ben/blijf vooralsnog voorstander van deze aanpak.
+- Gegeven de gestelde tijd en de tijd die aan de opdracht is besteed, komt het vermoeden dat het gebruik van XPATH locators niet in de lijn van verwachtingen ligt? Ik ben/blijf vooralsnog voorstander van deze aanpak.
 - Fix brainfart: vervang `//*` met `//input` (of ander type) en verwijder check op `not(contains(@id, 'label'))`.
+- Uitbreiden happy trail test met co-applicant opties.
 
 # Uitvoeren tests
 
@@ -32,3 +33,6 @@ Test rapport inzien:
 ```shell
 npx playwright test
 ```
+
+# Test Resultaat
+![Test Resultaat](img/test_result.jpg "Test Resultaat")
