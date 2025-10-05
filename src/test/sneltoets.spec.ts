@@ -5,19 +5,17 @@ var targetUrl = 'https://mijn.nhg.nl/'
 
 // TODO: nicely group locators in a separate file.
 
-// Regular expressions by way of 'matches' is not supported (yet)
+// VERIFY: Regular expressions by way of 'matches' is not supported (yet)?
 // For example: cannot use '//*[matches(@id, "^371.InkomensToets.Landingspagina.radioButtons1_.{3}_10_1$")]'
 
 // TODO: Can use string formatting and extract prefix '371.InkomensToets.'
-// TODO: And/or can extract XPATH query string format: '//*[starts-with(@id, "[PREFIX][STARTS_WITH]]")]'
+// TODO: And/or can extract XPATH query string format: '//*[starts-with(@id, "[PREFIX][CATEGORY][ELEMENT]")]'
 
-// !!TODO!!: replace 'label' suffix check for element type specification. #brainfart
-
-// TODO: check with dev's regarding:
-// - '.textBox[XX]_' naming. Maybe more descriptive names would be nice?
+// TODO: check with dev's regarding...:
+// - the '.textBox[XX]_' naming. Maybe more descriptive names would be nice?
 // - what's with the _XXX suffix and '371.' prefix?
 // - is the '_201801_' volatile?
-// - inconsistent naming for energyLabel element(s)
+// - inconsistent naming for energyLabel element.
 
 var remainingDebtYes = '//input[starts-with(@id, "371.InkomensToets.Landingspagina.radioButtons1_") and @value="true"]'
 var remainingDebtNo = '//input[starts-with(@id, "371.InkomensToets.Landingspagina.radioButtons1_") and @value="false"]'
@@ -47,7 +45,7 @@ var coApplicantFinancialObligationsNo = '//input[starts-with(@id, "371.InkomensT
 var financialObligationsYes = '//input[starts-with(@id, "371.InkomensToets.NhgInkToetsContent_201801.radioButtons2_") and @value="true"]'
 var financialObligationsNo = '//input[starts-with(@id, "371.InkomensToets.NhgInkToetsContent_201801.radioButtons2_") and @value="false"]'
 
-// TODO: moving coApplicant tests & locators to separate TS file, eliminates having to use a specified prefixes for naming.
+// TODO: moving coApplicant tests & locators to separate TS file; eliminates having to use a specified prefixes for naming.
 var coApplicantObligationMonthlyFee = '//input[starts-with(@id, "371.InkomensToets.NhgInkToetsContent_201801.textBox6_")]'
 var coApplicantObligationMonths = '//input[starts-with(@id, "371.InkomensToets.NhgInkToetsContent_201801.textBox7_")]'
 var coApplicantObligationMaintenanceAmount = '//input[starts-with(@id, "371.InkomensToets.NhgInkToetsContent_201801.textBox8_")]'
@@ -67,7 +65,6 @@ function dateToDDMMYYYY(date: Date): string {
     return `${day}-${month}-${year}`;
 }
 
-// --- Basic validation/availability tests ---
 test('page available', async ({ page }) => {
   await page.goto(targetUrl);
   await expect(page).toHaveTitle(/Sneltoets Acceptatie/);
@@ -79,12 +76,12 @@ test('form elements available', async ({ page }) => {
   await page.goto(targetUrl);
 
   // General information
-  // TODO: Maybe build/check for function to check visibility for multiple locators
+  // TODO: Maybe build a function to check visibility for multiple locators at once.
   await expect(page.locator(remainingDebtNo)).toBeVisible();
   await expect(page.locator(remainingDebtYes)).toBeVisible();
   await expect(page.locator(remainingDebtNo)).toBeChecked();
 
-  // TODO: look for library that does await with all the boilerplate...
+  // TODO: look for library that does away with all the boilerplate code (`await expect(page.locator([XPATH])).toBeVisible();`)...
   await expect(page.locator(amountToLoan)).toBeVisible();
   await expect(page.locator(amountBox3Loan)).toBeVisible();
   await expect(page.locator(mortgageRate)).toBeVisible();
@@ -116,7 +113,7 @@ test('form elements available', async ({ page }) => {
    * But in this case:
    *   await expect(page.getByRole('button', { name: "Bereken" })).toBeVisible();
    * There are multiple hits (one visible, one hidden) which doesn't help.
-   * I prefer consistently using the same type of locator.
+   * I prefer consistently using the same type of locator and/or with the highest amount of certainty.
    *
    * Ref: https://playwright.dev/docs/locators
    */
@@ -195,7 +192,7 @@ test('valid calculation', async ({ page }) => {
   await expect(page.locator(indicationLoan)).toBeVisible();
 
   // Expected format: dd-mm-yyyy
-  // NOTE: can yield the wrong date when test case is executed around midnight!
+  // NOTE: can yield the 'WRONG' date when test case is executed around midnight!
   let formattedDate = dateToDDMMYYYY(new Date())
   await expect(page.locator(calculationDate)).toHaveText(formattedDate);
 
@@ -209,10 +206,10 @@ test('valid calculation', async ({ page }) => {
 
 test('valid calculation w. co-applicant w. debt', async ({ page }) => {
   // Now we try variant of a correct calculation request.
-  // TODO: hm, code duplication. Need to figure out the best way not to do the same thing twice in Playwright/TS.
-  //       Move to a function?
-  //       Call one test case within the other?
-  //       Separate test logic from the Playwright framework in general?
+  // TODO: Code duplication. Need to figure out the best way not to do the same thing twice in Playwright/TS.
+  //       - Move to a function?
+  //       - Call one test case within the other?
+  //       - Separate test logic from the Playwright framework entirely?
   await page.goto(targetUrl);
 
   await page.locator(remainingDebtYes).check();
@@ -236,13 +233,13 @@ test('valid calculation w. co-applicant w. debt', async ({ page }) => {
   await page.locator(dateOfBirth).fill("07-09-1976");
   await page.locator(grossAnnualIncome).fill("45000");
   await page.locator(reducedIncome).fill("10000")
-  await page.locator(dateOfBirth).focus(); // leaving field, triggering formatting of contents
+  await page.locator(dateOfBirth).focus(); // leaving field, triggering number re-formatting of content
 
   await expect(page.locator(annualGroundRent)).toHaveValue("5.000")
   await expect(page.locator(grossAnnualIncome)).toHaveValue("45.000")
   await expect(page.locator(reducedIncome)).toHaveValue("10.000")
 
-  await page.locator(reductionStartMonth).fill("200")  // At the 100-th month of mortgage duration
+  await page.locator(reductionStartMonth).fill("200")  // At the N-th month of mortgage duration
 
   // co-applicant details:
   await page.locator(coApplicantYes).check()
@@ -250,7 +247,7 @@ test('valid calculation w. co-applicant w. debt', async ({ page }) => {
   await page.locator(coApplicantGrossAnnualIncome).fill("55000")
   await page.locator(coApplicantReducedIncome).fill("15000")
   await page.locator(coApplicantReductionStartMonth).fill("200")
-  await page.locator(coApplicantDob).focus(); // leaving field, triggering formatting of contents
+  await page.locator(coApplicantDob).focus(); // leaving field, triggering number re-formatting of content
 
   await expect(page.locator(coApplicantGrossAnnualIncome)).toHaveValue("55.000")
   await expect(page.locator(coApplicantReducedIncome)).toHaveValue("15.000")
@@ -273,7 +270,7 @@ test('valid calculation w. co-applicant w. debt', async ({ page }) => {
   await expect(page.locator(indicationLoan)).toBeVisible();
 
   // Expected format: dd-mm-yyyy
-  // NOTE: can yield the wrong date when test case is executed around midnight!
+  // NOTE: can yield the 'WRONG' date when test case is executed around midnight!
   let formattedDate = dateToDDMMYYYY(new Date())
   await expect(page.locator(calculationDate)).toHaveText(formattedDate);
 
@@ -289,5 +286,7 @@ test('breaking the calculation', async ({ page }) => {
   await page.locator(amountToLoan).fill("a");
   // Try:
   // -1/-1,0/1,0/450001/1.23e10/1e10/এক/450.000/4,5/>MAX INT/>MAX DECIMAL/\0
+
   // ...etc
+  // FUN STUFF: scientific notation is accepted and correctly interpreted :)
 });
